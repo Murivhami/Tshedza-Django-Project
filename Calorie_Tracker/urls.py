@@ -26,6 +26,6 @@ router.register(r'nutritional_product', NutritionalProductViewSet)
 
 
 urlpatterns = [
-    #path('admin/', admin.site.urls),
-    path('FitFair/', include(router.urls)),
+    path('admin/', admin.site.urls),
+    path('', include(router.urls)),
 ]
