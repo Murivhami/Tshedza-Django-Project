@@ -27,5 +27,6 @@ router.register(r'nutritional_product', NutritionalProductViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),
     path('', include(router.urls)),
 ]

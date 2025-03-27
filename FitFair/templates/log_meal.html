@@ -1,0 +1,21 @@
+<h1>Log a Meal</h1>
+<form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="meal_type">Meal Type:</label>
+        {{ form.meal_type }}
+    </div>
+    <div class="form-group">
+        <label for="food_item">Food Item:</label>
+        {{ form.food_item }}
+    </div>
+    <div class="form-group">
+        <label for="quantity">Quantity:</label>
+        {{ form.quantity }}
+    </div>
+    <div class="form-group">
+        <label for="notes">Notes:</label>
+        {{ form.notes }}
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
