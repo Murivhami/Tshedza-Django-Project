@@ -53,10 +53,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'Calorie_Tracker.urls'
 
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -74,6 +76,11 @@ WSGI_APPLICATION = 'Calorie_Tracker.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+
+from pathlib import Path
+
+# Define BASE_DIR as a Path object
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 DATABASES = {
     'default': {
@@ -125,3 +132,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = 'dashboard'
