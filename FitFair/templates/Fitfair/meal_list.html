@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Meal List</title>
+</head>
+<body>
+    <h1>Meals Logged</h1>
+    <ul>
+        {% for meal in meals %}
+            <li>
+                <strong>{{ meal.meal_type }}</strong> - {{ meal.total_calories }} kcal
+                <br>
+                Logged on: {{ meal.date }}
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'log_meal' %}">Log Another Meal</a>
+</body>
+</html>

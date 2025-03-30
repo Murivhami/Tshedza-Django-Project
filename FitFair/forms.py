@@ -1,4 +1,5 @@
 from django import forms
+from .models import Meal
 #Registration Form
 
 from django import forms
@@ -10,5 +11,11 @@ class RegisterForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']  
+
+class MealForm(forms.ModelForm):
+    class Meta:
+        model = Meal
+        fields = ['meal_of_the_day', 'total_calories']
+
 
 
