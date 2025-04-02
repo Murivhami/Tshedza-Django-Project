@@ -22,7 +22,7 @@ def register(request):
         form = RegisterForm()
     return render(request, 'FitFair/register.html', {'form': form})
 
-def login(request):
+def custom_login(request):
     return render(request, 'login.html')
 
 def log(request):

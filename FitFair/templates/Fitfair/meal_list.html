@@ -8,7 +8,17 @@
     <ul>
         {% for meal in meals %}
             <li>
-                <strong>{{ meal.meal_type }}</strong> - {{ meal.total_calories }} kcal
+                <strong>{{ meal.meal_of_the_day }}</strong> - {{ meal.total_calories }} kcal
+                <br>
+                food item: {{meal.food_item}}
+                <br>
+                fats: {{meal.fats}}
+                <br>
+                proteins: {{meal.proteins}}
+                <br>
+                carbs: {{meal.carbs}}
+                <br>
+                quantity: {{meal.quantity}}
                 <br>
                 Logged on: {{ meal.date }}
             </li>

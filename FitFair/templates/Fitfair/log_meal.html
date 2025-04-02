@@ -3,4 +3,8 @@
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">Log Meal</button>
+    <!--Cancel button-->
+    <a href="{% url 'meal_list' %}">
+        <button type="button">Cancel</button>
+    </a>
 </form>

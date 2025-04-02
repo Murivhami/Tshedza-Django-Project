@@ -4,7 +4,7 @@ from .models import Meal, CustomUser
 class MealSerializer(serializers.ModelSerializer):
     class Meta:
         model = Meal
-        fields = ['mealtype', 'total_calories', 'date']
+        fields = ['meal_of_the_day', 'total_calories', 'date']
 
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
