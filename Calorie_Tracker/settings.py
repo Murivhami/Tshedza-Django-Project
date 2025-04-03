@@ -39,7 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'FitFair',
     'rest_framework',
+    'django_filters',
 ]
+
+REST_FRAMEWORK = {'DEFAULT_FILTER_BACKENDS':['django_filters.rest_framework.DjangoFilterBackend']}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -116,7 +120,7 @@ AUTH_USER_MODEL = 'FitFair.CustomUser'
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Johannesburg'
 
 USE_I18N = True
 
