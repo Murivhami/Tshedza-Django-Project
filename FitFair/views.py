@@ -7,6 +7,7 @@ from .serializers import MealSerializer
 from .forms import MealForm, RegisterForm
 from django.contrib.auth.decorators import login_required
 from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import Sum
 
 
 def index(request):
@@ -56,11 +57,13 @@ def log_meal(request):
 def meal_list(request):
     selected_date = request.GET.get('date')
     meals = Meal.objects.filter(user=request.user).order_by('-date')
+    total_calories = 0
     
     if selected_date:
         meals = meals.filter(date__date=selected_date)#Filter meals based on selected date by user.
+        total_calories = meals.aggregate(Sum('total_calories')).get('total_calories__sum', 0)
 
-    return render(request, 'FitFair/meal_list.html', {'meals': meals, 'selected_date': selected_date})
+    return render(request, 'FitFair/meal_list.html', {'meals': meals, 'selected_date': selected_date, 'total_calories': total_calories})
 
 
 

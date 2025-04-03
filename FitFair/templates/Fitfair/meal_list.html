@@ -10,6 +10,14 @@
     <input type="date" name="date" value="{{ selected_date|default:'' }}">
     <button type="submit">Filter</button>
 </form>
+
+<form method="GET">
+    <input type="meal of the day" name="meal of the day" value="{{ selected_meal_of_the_day|default:'' }}">
+    <button type="submit">Filter</button>
+</form>
+
+<h>Total calories for the day: </h>
+<h>total_calories for  {{ selected_date|default:"today" }}: {{ total_calories }}</h>
     <ul>
         {% for meal in meals %}
             <li>
@@ -30,5 +38,8 @@
         {% endfor %}
     </ul>
     <a href="{% url 'log_meal' %}">Log Another Meal</a>
+    <p>
+    <a href="{% url 'dashboard' %}">Back to Dashboard</a></p>
+
 </body>
 </html>
