@@ -48,9 +48,7 @@ class Meal(models.Model):
 
 #According to nutritional principles, carbs, and proteins contribute 4 calories per gram. 
 # Fats contribute 9 calories per gram, Fiber 2 calories per gram.
-    #def total_calories(self):
-        #return self.nutritionalproduct.aggregate(total=Sum((Sum('carbohydrates')*4) + 
-                                                           #(Sum('proteins')*4) + (Sum('fiber')*2) + (Sum('fats')*9)))
+    
 
     #def __str__(self):
         #return f"{self.user} - {self.mealtype} - {self.total_calories} intake on {self.date}"

@@ -15,7 +15,7 @@ class RegisterForm(UserCreationForm):
 class MealForm(forms.ModelForm):
     class Meta:
         model = Meal
-        fields = ['meal_of_the_day', 'food_item','fats', 'proteins', 'carbs' ,'quantity', 'total_calories']
+        fields = ['meal_of_the_day', 'food_item','fats', 'proteins', 'carbs' ,'quantity'] #'total_calories']
 
 
 
