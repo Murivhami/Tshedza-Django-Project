@@ -5,6 +5,11 @@
 </head>
 <body>
     <h1>Meals Logged</h1>
+
+    <form method="GET">
+    <input type="date" name="date" value="{{ selected_date|default:'' }}">
+    <button type="submit">Filter</button>
+</form>
     <ul>
         {% for meal in meals %}
             <li>

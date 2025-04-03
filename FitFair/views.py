@@ -6,6 +6,7 @@ from .models import Meal
 from .serializers import MealSerializer
 from .forms import MealForm, RegisterForm
 from django.contrib.auth.decorators import login_required
+from django_filters.rest_framework import DjangoFilterBackend
 
 
 def index(request):
@@ -22,7 +23,7 @@ def register(request):
         form = RegisterForm()
     return render(request, 'FitFair/register.html', {'form': form})
 
-def custom_login(request):
+def login(request):
     return render(request, 'login.html')
 
 def log(request):
@@ -33,6 +34,8 @@ def log(request):
 class MealViewSet(viewsets.ModelViewSet):
     queryset = Meal.objects.all()
     serializer_class = MealSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['date']
 
 @login_required
 def log_meal(request):
@@ -48,11 +51,18 @@ def log_meal(request):
 
     return render(request, 'FitFair/log_meal.html', {'form': form})
 
+
 @login_required
 def meal_list(request):
+    selected_date = request.GET.get('date')
     meals = Meal.objects.filter(user=request.user).order_by('-date')
+    
+    if selected_date:
+        meals = meals.filter(date__date=selected_date)#Filter meals based on selected date by user.
 
-    return render(request, 'FitFair/meal_list.html', {'meals': meals})
+    return render(request, 'FitFair/meal_list.html', {'meals': meals, 'selected_date': selected_date})
+
+
 
 
 

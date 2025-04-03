@@ -33,13 +33,13 @@ class Meal(models.Model):
     ('lunch', 'lunch'),
     ('dinner', 'dinner')
     ]
-    meal_of_the_day = models.CharField(max_length=255,choices=MEALTYPE_CHOICES, null=False, blank=False)
+    meal_of_the_day = models.CharField(max_length=255,choices=MEALTYPE_CHOICES, null=True, blank=True)
     food_item = models.CharField(max_length=255, null=True, blank=True)
     fats = models.CharField(max_length=255, null=True, blank=True)
     proteins = models.CharField(max_length=255, null=True, blank=True)
     carbs = models.CharField(max_length=255, null=True, blank=True)
     quantity = models.IntegerField(null=True, blank=True)
-    total_calories = models.PositiveIntegerField()
+    total_calories = models.PositiveIntegerField(null = True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
