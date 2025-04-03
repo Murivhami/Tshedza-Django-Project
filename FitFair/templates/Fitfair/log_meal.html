@@ -1,3 +1,10 @@
+<ul>
+        {% for meal in meals %}
+            <li>
+                <h>Welcome {{meal.user}}</h></li>
+                {% endfor %}
+                </ul>
+
 <h1>Log Your Meal</h1>
 <form method="post">
     {% csrf_token %}
