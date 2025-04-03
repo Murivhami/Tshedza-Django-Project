@@ -9,17 +9,17 @@ from django.contrib.auth.decorators import login_required
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Sum
 
-
+#Landing page when server runs.
 def index(request):
-    return render(request, 'dashboard.html')
+    return render(request, 'dashboard.html') #Returns a dashboard.
 
 def register(request):
-    if request.method == "POST":
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('dashboard')  # Redirect after login
+    if request.method == "POST":#User requests form from server
+        form = RegisterForm(request.POST) #Form for registering is sent to client
+        if form.is_valid(): #If all the fields are correctly populated, the form can be saved.
+            user = form.save() #Form saved
+            login(request, user) #Logged in user authenticated
+            return redirect('dashboard')  # Redirect after login to the dashboard
     else:
         form = RegisterForm()
     return render(request, 'FitFair/register.html', {'form': form})
