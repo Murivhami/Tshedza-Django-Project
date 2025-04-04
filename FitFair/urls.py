@@ -1,9 +1,9 @@
 from django.urls import path, include
-from .views import register, log, log_meal, meal_list
+from .views import register, log, log_meal, meal_list, MealViewSet, CustomUserViewSet
 from django.contrib.auth.views import LoginView, LogoutView
 from . import views
 from rest_framework.routers import DefaultRouter
-from .views import MealViewSet
+
 
 urlpatterns = [
     path('', views.index, name='dashboard'),
@@ -18,7 +18,10 @@ urlpatterns = [
 
 router = DefaultRouter()
 router.register(r'meal', MealViewSet)
+router.register(r'users', CustomUserViewSet)
+
 
 urlpatterns += [
     path('api/', include(router.urls)),
+    
 ]

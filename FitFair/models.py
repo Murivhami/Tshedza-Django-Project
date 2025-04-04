@@ -40,7 +40,7 @@ class Meal(models.Model):
     carbs = models.CharField(max_length=255, null=True, blank=True)
     quantity = models.IntegerField(null=True, blank=True)
     total_calories = models.PositiveIntegerField(null = True, blank=True)
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateField()
 
     def __str__(self):
         return f"{self.meal_of_the_day} - {self.total_calories} kcal"
