@@ -10,8 +10,8 @@ Individuals are becoming more cautious about what they consume due to a lot of i
 **Features**
 
 1. *Registration Page*: Allows user to register their profiles on the app.
-2. Log meal page:Log meals together with calories for a specific day.
-3. Meal history: A record of meals and calorie intake for the past days.
+2. *Log meal page*:Log meals together with calories for a specific day.
+3. *Meal history*: A record of meals and calorie intake for the past days.
 
 **Installation**
 
@@ -19,9 +19,9 @@ The below are the steps to take when installing the app:
 
 **Usage**
 
-1. SignUp and Login: Create a new account if one is a new user and start logging and tracking meals.
-2. Log Meals: Click on the Log Meal button to generate a new form to log daily meals.
-3. Track daily calories: The meal_list provides a view of calorie intake per day.
+1. *SignUp and Login*: Create a new account if one is a new user and start logging and tracking meals.
+2. *Log Meals*: Click on the Log Meal button to generate a new form to log daily meals.
+3. *Track daily calories*: The meal_list provides a view of calorie intake per day.
 
 **Technologies Used**
 
