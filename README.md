@@ -1,5 +1,5 @@
 # Tshedza-Django-Project
-                                                                    <span style="font-size: 80px;"><strong>FitFair</strong></span>
+                                                                    ***FitFair***
 
 
 **Background**
