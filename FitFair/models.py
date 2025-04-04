@@ -3,6 +3,9 @@ from django.db import models
 import datetime
 from django.db.models import Sum
 
+#from django.contrib.auth import get_user_model
+#CustomUser = get_user_model()
+
 #model for user details.
 class CustomUser(AbstractUser):
     CITY_CHOICES = [

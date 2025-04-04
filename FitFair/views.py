@@ -1,51 +1,60 @@
-from rest_framework import APIView
-from rest_framework.response import Response
-from rest_framework import status
+from django.contrib.auth.views import LoginView, LogoutView
+#from .views import MealViewSet
+from .serializers import MealSerializer, CustomUserSerializer
+from .models import Meal
+from rest_framework import viewsets, permissions, status
+from rest_framework import serializers
+from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
-from .serializers import CustomUserSerializer, MealSerializer
-from rest_framework import viewsets
-from rest_framework import permissions
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny
+from rest_framework.decorators import api_view, permission_classes
+#from rest_framework.renderers import JSONRenderer
+#from rest_framework.decorators import renderer_classes
 
-User = get_user_model()
-#User registration view
-class UserRegistrationView(APIView):
-    def post(self, request):
-        # Serialize the request data for creating a new user
+
+
+#User = get_user_model()
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+#@renderer_classes([JSONRenderer]) 
+def register(request):
+    if request.method == 'POST':
+        # Assume the request body contains the necessary data for registration
         serializer = CustomUserSerializer(data=request.data)
+        
         if serializer.is_valid():
-            user = serializer.save()  # Save the user in the database
-            # Generate a token for the new user
-            token, created = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key}, status=status.HTTP_201_CREATED)
+            # Save the user and return a response
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#User login view
-from rest_framework.authtoken.views import obtain_auth_token
-class UserLoginView(APIView):
-    permission_classes = [permissions.AllowAny]
+def create(self, validated_data):
+    # Extract the fields needed for user creation
+    username = validated_data['username']
+    email = validated_data['email']
+    password = validated_data['password1']
+    age = validated_data.get('age', None)  # Optional fields
+    location = validated_data.get('location', None)
 
-    def post(self, request):
-        # This view uses the standard token authentication view provided by DRF
-        return obtain_auth_token(request=request)
+    user = User.objects.create_user(
+        username=username,
+        email=email,
+        password=password,
+    )
 
-#User profile view
-class UserProfileView(APIView):
-    permission_classes = [permissions.IsAuthenticated]  # Ensure only authenticated users can access
+    # Save additional fields if present
+    if age:
+        user.age = age
+    if location:
+        user.location = location
+    user.save()
 
-    def get(self, request):
-        # Return the user's profile (using the custom user model)
-        user = request.user
-        serializer = CustomUserSerializer(user)
-        return Response(serializer.data)
+    return user
 
-    def put(self, request):
-        # Update user profile information
-        user = request.user
-        serializer = CustomUserSerializer(user, data=request.data)
-        if serializer.is_valid():
-            serializer.save()  # Save updated user data
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
         
@@ -55,13 +64,17 @@ class MealViewSet(viewsets.ModelViewSet):
     serializer_class = MealSerializer
     permission_classes = [permissions.IsAuthenticated]
     
-     def perform_create(self, serializer):
+   # def perform_create(self, serializer):
         # Ensure that the meal is associated with the logged-in user
-        serializer.save(user=self.request.user)
+        #serializer.save(user=self.request.user)
     
-    def get_queryset(self):
+    #def get_queryset(self):
         # Limit meals to only those belonging to the logged-in user
-        return Meal.objects.filter(user=self.request.user)
+        #return Meal.objects.filter(user=self.request.user)
 
+from django.contrib.auth.views import LoginView
+
+class CustomLoginView(LoginView):
+    template_name = 'registration/login.html'
 
 
