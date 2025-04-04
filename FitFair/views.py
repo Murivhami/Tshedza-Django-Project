@@ -1,83 +1,62 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout, authenticate
-from django.http import HttpResponse
+from rest_framework import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth import get_user_model
+from .serializers import CustomUserSerializer, MealSerializer
 from rest_framework import viewsets
-from .models import Meal
-from .serializers import MealSerializer
-from .forms import MealForm, RegisterForm
-from django.contrib.auth.decorators import login_required
-from django_filters.rest_framework import DjangoFilterBackend
-from django.db.models import Sum
+from rest_framework import permissions
 
-#Landing page when server runs.
-def index(request):
-    return render(request, 'dashboard.html') #Returns a dashboard.
+#Creating a new User
+class CreateUserView(APIView):
+    def post(self, request):
+        # Create a new user using the provided data
+        serializer = CustomUserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()  # This will save the new user to the database
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-def register(request):
-    if request.method == "POST":#User to send info/save/insert info to server
-        form = RegisterForm(request.POST) #Form for registering is sent to client
-        if form.is_valid(): #If all the fields are correctly populated, the form can be saved.
-            user = form.save() #Form saved
-            login(request, user) #Logged in user authenticated
-            return redirect('dashboard')  # Redirect after login to the dashboard
-    else:
-        form = RegisterForm()
-    return render(request, 'FitFair/register.html', {'form': form}) #The form template is rendered inorder for the user to register following the logic above.
+#Retrieve User
+class UserDetailView(APIView):
+    def get(self, request, pk):
+        try:
+            user = User.objects.get(pk=pk)  # Use dynamic user model here
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
-def login(request):
-    return render(request, 'login.html') #Renders a login page provided the user provides the correct login details.
+        # Serialize the user object
+        serializer = CustomUserSerializer(user)
+        return Response(serializer.data)
 
-def log(request):
-    return render(request, 'FitFair/log.html')
+#Update User
+class UpdateUserView(APIView):
+    def put(self, request, pk):
+        try:
+            user = User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
+        # Update the user with the new data
+        serializer = CustomUserSerializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()  # Update the user in the database
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        
 #Views for models allowing all CRUD operations
 class MealViewSet(viewsets.ModelViewSet):
     queryset = Meal.objects.all()
     serializer_class = MealSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['date']
-
-#View for logging a meal.
-@login_required
-def log_meal(request):
-    if request.method == 'POST': # User requests a form/user wants to log a meal(client - server)
-        form = MealForm(request.POST) #log_meal form is opened. 
-        if form.is_valid(): #If all the fields are valid, then the user can save the info.
-            meal = form.save(commit=False)
-            meal.user = request.user  # Associate meal with logged-in user
-            meal.save()
-            return redirect('meal_list')  # Redirect after logging a meal
-    else:
-        form = MealForm()
-
-    return render(request, 'FitFair/log_meal.html', {'form': form})
-
-
-#Views for dispalying the meals the user has logged for a particular day.
-@login_required
-def meal_list(request):
-    selected_date = request.GET.get('date')  #shows all the calendar days. GET method is the client requesting info to be retrieved from the server in this case a calendar with days.
-    #selected_meal_of_the_day = request.GET.get('meal_of_the_day')
-    meals = Meal.objects.filter(user=request.user).order_by('-date') #Retrieve data from the database based on user.
-    total_calories = 0
+    permission_classes = [permissions.IsAuthenticated]
     
-    if selected_date:#If date is selected, only meals for the specific day needs to show.
-        meals = meals.filter(date__date=selected_date)#Filter meals based on selected date by user.
-        #meals = meals.filter(meal_of_the_day__meal_of_the_day = selected_meal_of_the_day)
-        total_calories = meals.aggregate(Sum('total_calories')).get('total_calories__sum', 0) #Allows 0 if there were no meals logged for that day.
-        #total_calories = meals.aggregate(total=Sum((Sum('carbs')*4) + 
-                                                           #(Sum('proteins')*4) + (Sum('fiber')*2) + (Sum('fats')*9)))
-
-    return render(request, 'FitFair/meal_list.html', {'meals': meals, 'selected_date': selected_date, 'total_calories': total_calories})
-
-#def total_calories(self):
-        #return self.nutritionalproduct.aggregate(total=Sum((Sum('carbohydrates')*4) + 
-                                                           #(Sum('proteins')*4) + (Sum('fiber')*2) + (Sum('fats')*9)))
+     def perform_create(self, serializer):
+        # Ensure that the meal is associated with the logged-in user
+        serializer.save(user=self.request.user)
+    
+    def get_queryset(self):
+        # Limit meals to only those belonging to the logged-in user
+        return Meal.objects.filter(user=self.request.user)
 
 
 
-
-
-
-
-# Create your views here.
