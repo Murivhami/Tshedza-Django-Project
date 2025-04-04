@@ -9,13 +9,13 @@ Individuals are becoming more cautious about what they consume due to a lot of i
 
 **Features**
 
-1. Registration: Allows user to register their profiles on the app.
-2. Log meals together with calories for a specific day.
+1. *Registration Page*: Allows user to register their profiles on the app.
+2. Log meal page:Log meals together with calories for a specific day.
 3. Meal history: A record of meals and calorie intake for the past days.
 
 **Installation**
 
-The below are the steps to take when installing the app.
+The below are the steps to take when installing the app:
 
 **Usage**
 
