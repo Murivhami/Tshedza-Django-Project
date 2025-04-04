@@ -6,42 +6,47 @@ from .serializers import CustomUserSerializer, MealSerializer
 from rest_framework import viewsets
 from rest_framework import permissions
 
-#Creating a new User
-class CreateUserView(APIView):
+User = get_user_model()
+#User registration view
+class UserRegistrationView(APIView):
     def post(self, request):
-        # Create a new user using the provided data
+        # Serialize the request data for creating a new user
         serializer = CustomUserSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()  # This will save the new user to the database
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            user = serializer.save()  # Save the user in the database
+            # Generate a token for the new user
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({'token': token.key}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#Retrieve User
-class UserDetailView(APIView):
-    def get(self, request, pk):
-        try:
-            user = User.objects.get(pk=pk)  # Use dynamic user model here
-        except User.DoesNotExist:
-            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+#User login view
+from rest_framework.authtoken.views import obtain_auth_token
+class UserLoginView(APIView):
+    permission_classes = [permissions.AllowAny]
 
-        # Serialize the user object
+    def post(self, request):
+        # This view uses the standard token authentication view provided by DRF
+        return obtain_auth_token(request=request)
+
+#User profile view
+class UserProfileView(APIView):
+    permission_classes = [permissions.IsAuthenticated]  # Ensure only authenticated users can access
+
+    def get(self, request):
+        # Return the user's profile (using the custom user model)
+        user = request.user
         serializer = CustomUserSerializer(user)
         return Response(serializer.data)
 
-#Update User
-class UpdateUserView(APIView):
-    def put(self, request, pk):
-        try:
-            user = User.objects.get(pk=pk)
-        except User.DoesNotExist:
-            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-
-        # Update the user with the new data
+    def put(self, request):
+        # Update user profile information
+        user = request.user
         serializer = CustomUserSerializer(user, data=request.data)
         if serializer.is_valid():
-            serializer.save()  # Update the user in the database
+            serializer.save()  # Save updated user data
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
         
 #Views for models allowing all CRUD operations
