@@ -24,6 +24,8 @@ The below are the steps to take when installing the app:
 3. *Track daily calories*: The meal_list provides a view of calorie intake per day.
 
 **Technologies Used**
-
+1. *Backend Language*: Python (3.13.1)
+2. *Framework*: Django
+3. *Styling*: HTML and CSS
 
 This project entails building an app to help track daily calorie intake.
