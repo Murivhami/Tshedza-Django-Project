@@ -67,17 +67,38 @@ class MealViewSet(viewsets.ModelViewSet):
       #return Meal.objects.all()
       return Meal.objects.filter(user=self.request.user)
     
-    #def get_queryset(self):
-        #valid_meals = Meal.objects.exclude(meal_of_the_day__isnull=True, total_calories__isnull=True)
+
+    def get_queryset(self):
+        queryset = Meal.objects.filter(user=self.request.user)
+        
+        # Get the date filter from the query parameters
+        date_filter = self.request.query_params.get('date', None)
+        
+        if date_filter:
+            # If a date is provided, filter meals by the date
+            try:
+                date = datetime.strptime(date_filter, '%Y-%m-%d').date()
+                queryset = queryset.filter(date=date)
+            except ValueError:
+                pass  # Handle invalid date format, or return an empty queryset
+        
+        return queryset
     
     def perform_create(self, serializer):
         # Ensure that the meal is associated with the logged-in user
         serializer.save(user=self.request.user)
     
+#Meal of the day filter
 
-    #def get_queryset(self):
-        # Limit meals to only those belonging to the logged-in user
-        #return Meal.objects.filter(user=self.request.user)
+    def get_queryset(self):
+        queryset = Meal.objects.filter(user=self.request.user)
+        meal_type = self.request.query_params.get('meal_of_the_day', None)
+        
+        if meal_type:
+            # If a date is provided, filter meals by the date
+                queryset = queryset.filter(meal_of_the_day=meal_type)
+        return queryset 
+
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -85,6 +106,7 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from rest_framework import status
 from rest_framework.permissions import AllowAny
+from datetime import datetime, date
 
 class APILoginView(APIView):
     permission_classes = [AllowAny]
