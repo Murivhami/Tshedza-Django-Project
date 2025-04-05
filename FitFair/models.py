@@ -24,6 +24,7 @@ class CustomUser(AbstractUser):
     ]
     age = models.PositiveIntegerField(null=True, blank=True)
     location = models.CharField(max_length=255, choices=CITY_CHOICES, null=True, blank=False)
+    
 
     def __str__(self):
         return self.username
@@ -38,11 +39,11 @@ class Meal(models.Model):
     ]
     meal_of_the_day = models.CharField(max_length=255,choices=MEALTYPE_CHOICES, null=True, blank=True)
     food_item = models.CharField(max_length=255, null=True, blank=True)
-    fats = models.CharField(max_length=255, null=True, blank=True)
-    proteins = models.CharField(max_length=255, null=True, blank=True)
-    carbs = models.CharField(max_length=255, null=True, blank=True)
+    fats = models.FloatField(null=True)
+    proteins = models.FloatField(null=True)
+    carbs = models.FloatField(null = True)
     quantity = models.IntegerField(null=True, blank=True)
-    total_calories = models.PositiveIntegerField(null = True, blank=True)
+    total_calories = models.FloatField(null=True)
     date = models.DateField()
 
     def __str__(self):

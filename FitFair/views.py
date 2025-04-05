@@ -63,15 +63,18 @@ class MealViewSet(viewsets.ModelViewSet):
 
 #Retrive meals belonging to a user.
     def get_queryset(self):
-     return Meal.objects.filter(user=self.request.user)
+      user = self.request.user
+      #return Meal.objects.all()
+      return Meal.objects.filter(user=self.request.user)
     
-    def get_queryset(self):
-        valid_meals = Meal.objects.exclude(name__isnull=True, calories__isnull=True)
+    #def get_queryset(self):
+        #valid_meals = Meal.objects.exclude(meal_of_the_day__isnull=True, total_calories__isnull=True)
     
     def perform_create(self, serializer):
         # Ensure that the meal is associated with the logged-in user
         serializer.save(user=self.request.user)
     
+
     #def get_queryset(self):
         # Limit meals to only those belonging to the logged-in user
         #return Meal.objects.filter(user=self.request.user)

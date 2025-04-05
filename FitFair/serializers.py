@@ -9,7 +9,7 @@ class MealSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
     class Meta:
         model = Meal
-        fields = ['username','meal_of_the_day', 'food_item', 'fats', 'proteins', 'carbs', 'date']
+        fields = '__all__'
 
 class CustomUserSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(write_only=True)
