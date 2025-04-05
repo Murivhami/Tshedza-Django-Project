@@ -59,11 +59,18 @@ def create(self, validated_data):
 class MealViewSet(viewsets.ModelViewSet):
     queryset = Meal.objects.all()
     serializer_class = MealSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
+
+#Retrive meals belonging to a user.
+    def get_queryset(self):
+     return Meal.objects.filter(user=self.request.user)
     
-   # def perform_create(self, serializer):
+    def get_queryset(self):
+        valid_meals = Meal.objects.exclude(name__isnull=True, calories__isnull=True)
+    
+    def perform_create(self, serializer):
         # Ensure that the meal is associated with the logged-in user
-        #serializer.save(user=self.request.user)
+        serializer.save(user=self.request.user)
     
     #def get_queryset(self):
         # Limit meals to only those belonging to the logged-in user

@@ -6,9 +6,10 @@ User = get_user_model()
 
 #Meal serializer
 class MealSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
     class Meta:
         model = Meal
-        fields = '__all__'
+        fields = ['username','meal_of_the_day', 'food_item', 'fats', 'proteins', 'carbs', 'date']
 
 class CustomUserSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(write_only=True)

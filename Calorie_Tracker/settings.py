@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     #'django_filters',
     'rest_framework.authtoken',
     'rest_framework_simplejwt.token_blacklist',
+    'rest_framework_simplejwt',
 ]
 
 REST_FRAMEWORK = {
@@ -50,13 +51,13 @@ REST_FRAMEWORK = {
 #'DEFAULT_AUTHENTICATION_CLASSES': [
         #'rest_framework.authentication.SessionAuthentication',],
 
-        #'DEFAULT_AUTHENTICATION_CLASSES': [
-        #'rest_framework.authentication.TokenAuthentication',],
+        'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',],
 
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',],
 
-        'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework_simplejwt.authentication.JWTAuthentication',],
+        #'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework_simplejwt.authentication.JWTAuthentication',],
 
     #'DEFAULT_RENDERER_CLASSES': ['rest_framework.renderers.JSONRenderer',],
         
@@ -162,5 +163,5 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = 'meals/'
 LOGOUT_REDIRECT_URL = '/'
