@@ -7,10 +7,14 @@ User = get_user_model()
 #Meal serializer
 class MealSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
     class Meta:
         model = Meal
         fields = '__all__'
+        read_only_fields = ['username']
+        
 
+#CustomUser serializer
 class CustomUserSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
@@ -20,8 +24,9 @@ class CustomUserSerializer(serializers.ModelSerializer):
         fields = ['username', 'email', 'password1', 'password2', 'age', 'location']
 
     def validate(self, data):
-        # Ensure passwords match
+        # Check if the passwords match.
         if data['password1'] != data['password2']:
+            #If the password does not match, an error is returned.
             raise serializers.ValidationError("Passwords must match.")
         return data
 

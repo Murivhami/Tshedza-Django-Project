@@ -1,43 +1,41 @@
-from django.contrib.auth.views import LoginView, LogoutView
-#from .views import MealViewSet
+from django.shortcuts import render
 from .serializers import MealSerializer, CustomUserSerializer
 from .models import Meal
 from rest_framework import viewsets, permissions, status
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from django.contrib.auth import get_user_model
-from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
-#from rest_framework.renderers import JSONRenderer
-#from rest_framework.decorators import renderer_classes
+from datetime import datetime, date
 
 
+#App landing page
+def index(request):
+    return render(request, 'dashboard.html') #Returns a dashboard.
 
-#User = get_user_model()
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
-#@renderer_classes([JSONRenderer]) 
 def register(request):
     if request.method == 'POST':
-        # Assume the request body contains the necessary data for registration
+        # Becomes succesfull and the request body has all the required details for registering a user.
         serializer = CustomUserSerializer(data=request.data)
         
         if serializer.is_valid():
-            # Save the user and return a response
+            # Save the registered user and return a response to confirm sucessful registration.
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        #Returns error is the registration was not successful.
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 def create(self, validated_data):
-    # Extract the fields needed for user creation
+    # Extract the fields required for new user creation.
     username = validated_data['username']
     email = validated_data['email']
     password = validated_data['password1']
-    age = validated_data.get('age', None)  # Optional fields
-    location = validated_data.get('location', None)
+    age = validated_data.get('age', None)  # A user can still be created even if this field is not provided.
+    location = validated_data.get('location', None) # A user can still be created even if this field is not provided.
 
     user = User.objects.create_user(
         username=username,
@@ -55,7 +53,7 @@ def create(self, validated_data):
     return user
 
 
-#Views for models allowing all CRUD operations
+#Views for meal model allowing all CRUD operations
 class MealViewSet(viewsets.ModelViewSet):
     queryset = Meal.objects.all()
     serializer_class = MealSerializer
@@ -66,8 +64,8 @@ class MealViewSet(viewsets.ModelViewSet):
       user = self.request.user
       #return Meal.objects.all()
       return Meal.objects.filter(user=self.request.user)
-    
 
+#Filtering the meal info based on the date
     def get_queryset(self):
         queryset = Meal.objects.filter(user=self.request.user)
         
@@ -80,22 +78,19 @@ class MealViewSet(viewsets.ModelViewSet):
                 date = datetime.strptime(date_filter, '%Y-%m-%d').date()
                 queryset = queryset.filter(date=date)
             except ValueError:
-                pass  # Handle invalid date format, or return an empty queryset
-        
+                pass  
         return queryset
     
     def perform_create(self, serializer):
-        # Ensure that the meal is associated with the logged-in user
+        # Ensure that the meal belongs to the logged in user.
         serializer.save(user=self.request.user)
-    
-#Meal of the day filter
+        #Meal of the day filter
 
     def get_queryset(self):
         queryset = Meal.objects.filter(user=self.request.user)
         meal_type = self.request.query_params.get('meal_of_the_day', None)
-        
         if meal_type:
-            # If a date is provided, filter meals by the date
+            # If the meal type is provided, filter meals by the meal of the day(breakfast,lunch and dinner)
                 queryset = queryset.filter(meal_of_the_day=meal_type)
         return queryset 
 
@@ -106,7 +101,6 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from rest_framework import status
 from rest_framework.permissions import AllowAny
-from datetime import datetime, date
 
 class APILoginView(APIView):
     permission_classes = [AllowAny]
@@ -123,8 +117,10 @@ class APILoginView(APIView):
         if user is not None:
             # Generate a token for the authenticated user
             token, _ = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key})  # Send token as a response
+            return Response({'token': token.key})  # When the user in the database and the login is successful, 
+        #a token is sent in response.
         else:
+            #If the user credentials are not valid or the user does not exist on the system.
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 

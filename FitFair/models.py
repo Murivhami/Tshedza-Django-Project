@@ -1,12 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 import datetime
-from django.db.models import Sum
 
-#from django.contrib.auth import get_user_model
-#CustomUser = get_user_model()
-
-#model for user details.
+#Model for storing user details.
 class CustomUser(AbstractUser):
     CITY_CHOICES = [
         ('JHB', 'Johannesburg'),
@@ -29,13 +25,14 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.username
 
-#Model for storing the meal details.
+#Model for storing the meal details for a user.
 class Meal(models.Model):
     user= models.ForeignKey('CustomUser', on_delete=models.CASCADE)
     MEALTYPE_CHOICES = [
     ('breakfast', 'breakfast'),
     ('lunch', 'lunch'),
-    ('dinner', 'dinner')
+    ('dinner', 'dinner'),
+    ('snack', 'snack')
     ]
     meal_of_the_day = models.CharField(max_length=255,choices=MEALTYPE_CHOICES, null=True, blank=True)
     food_item = models.CharField(max_length=255, null=True, blank=True)
@@ -49,14 +46,5 @@ class Meal(models.Model):
     def __str__(self):
         return f"{self.meal_of_the_day} - {self.total_calories} kcal"
 
-
-#According to nutritional principles, carbs, and proteins contribute 4 calories per gram. 
-# Fats contribute 9 calories per gram, Fiber 2 calories per gram.
-    
-
-    #def __str__(self):
-        #return f"{self.user} - {self.mealtype} - {self.total_calories} intake on {self.date}"
-     
-#Model for storing the nutritional product details.
 
 

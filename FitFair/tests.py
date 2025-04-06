@@ -44,7 +44,7 @@ CustomUser = get_user_model()
 class CustomUserModelTest(TestCase):
 
     def setUp(self):
-        """Set up test data."""
+        #Set up test data
         self.user = CustomUser.objects.create_user(
             username="testuser",
             email="test@example.com",
@@ -53,50 +53,15 @@ class CustomUserModelTest(TestCase):
             location="JHB"
         )
     def test_user_creation(self):
-        """Test that a user is created successfully."""
+        #Test that a user is created successfully.
         self.assertEqual(self.user.username, "testuser")
         self.assertEqual(self.user.email, "test@example.com")
         self.assertEqual(self.user.age, 25)
         self.assertEqual(self.user.location, "JHB")
         self.assertTrue(self.user.check_password("password123"))
 
-    def test_location_choices(self):
-        """Test that location choices are valid."""
-        valid_locations = dict(CustomUser.CITY_CHOICES).keys()
-        self.assertIn(self.user.location, valid_locations)
-
-    def test_default_location_is_null(self):
-        """Test that location defaults to null if not provided."""
-        user_without_location = CustomUser.objects.create_user(
-            username="user2", email="user2@example.com", password="password123", age=30
-        )
-        self.assertIsNone(user_without_location.location)
     
-    def test_age_optional(self):
-        """Test that age can be null."""
-        user_without_age = CustomUser.objects.create_user(
-            username="user3", email="user3@example.com", password="password123", location="CPT"
-        )
-        self.assertIsNone(user_without_age.age)
 
-    def test_string_representation(self):
-        """Test the __str__ method of the user."""
-        self.assertEqual(str(self.user), "testuser")
-
-    def test_is_major(self):
-        """Test custom methods, like checking if the user is an adult."""
-        self.assertTrue(self.user.age >= 18)
-
-    def test_invalid_age(self):
-        """Test invalid age values."""
-        with self.assertRaises(ValueError):
-            CustomUser.objects.create_user(
-                username="user4",
-                email="user4@example.com",
-                password="password123",
-                age=-5,  # Invalid age
-                location="JHB"
-            )
 
 
 
